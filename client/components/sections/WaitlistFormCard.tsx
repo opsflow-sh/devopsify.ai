@@ -47,7 +47,10 @@ export default function WaitlistFormCard() {
 
   if (submitted) {
     return (
-      <section id="waitlist-form" className="container max-w-7xl mx-auto px-4 py-20 md:py-28">
+      <section
+        id="waitlist-form"
+        className="container max-w-7xl mx-auto px-4 py-20 md:py-28"
+      >
         <div className="max-w-2xl mx-auto">
           <div className="bg-background rounded-2xl border border-border/60 p-8 md:p-12 text-center">
             <CheckCircle2 className="w-16 h-16 text-primary mx-auto mb-6" />
@@ -60,7 +63,9 @@ export default function WaitlistFormCard() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={() => {
-                  document.getElementById("demo-section")?.scrollIntoView({ behavior: "smooth" });
+                  document
+                    .getElementById("demo-section")
+                    ?.scrollIntoView({ behavior: "smooth" });
                   setSubmitted(false);
                 }}
                 className="px-6 py-3 text-primary border border-primary/30 rounded-lg hover:bg-primary/5 transition font-semibold"
@@ -102,7 +107,10 @@ export default function WaitlistFormCard() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Email */}
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-foreground mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-semibold text-foreground mb-2"
+                >
                   Email <span className="text-primary">*</span>
                 </label>
                 <div className="relative">
@@ -121,7 +129,10 @@ export default function WaitlistFormCard() {
 
               {/* App Type */}
               <div>
-                <label htmlFor="appType" className="block text-sm font-semibold text-foreground mb-2">
+                <label
+                  htmlFor="appType"
+                  className="block text-sm font-semibold text-foreground mb-2"
+                >
                   What are you building?
                 </label>
                 <select
@@ -141,7 +152,10 @@ export default function WaitlistFormCard() {
 
               {/* Built on Replit */}
               <div>
-                <label htmlFor="replit" className="block text-sm font-semibold text-foreground mb-2">
+                <label
+                  htmlFor="replit"
+                  className="block text-sm font-semibold text-foreground mb-2"
+                >
                   Built on Replit?
                 </label>
                 <select
@@ -159,7 +173,10 @@ export default function WaitlistFormCard() {
 
               {/* GitHub URL (Optional) */}
               <div>
-                <label htmlFor="github" className="block text-sm font-semibold text-foreground mb-2">
+                <label
+                  htmlFor="github"
+                  className="block text-sm font-semibold text-foreground mb-2"
+                >
                   GitHub repo link (optional)
                 </label>
                 <input
@@ -190,7 +207,11 @@ export default function WaitlistFormCard() {
 
               {/* Compliance Note */}
               <p className="text-xs text-foreground/60 text-center">
-                We'll only email product updates. <a href="/privacy" className="text-primary hover:underline">Unsubscribe anytime</a>.
+                We'll only email product updates.{" "}
+                <a href="/privacy" className="text-primary hover:underline">
+                  Unsubscribe anytime
+                </a>
+                .
               </p>
             </form>
           </div>

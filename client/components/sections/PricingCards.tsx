@@ -83,7 +83,9 @@ export default function PricingCards() {
                 <h3 className="text-2xl font-bold text-foreground mb-2">
                   {tier.name}
                 </h3>
-                <p className="text-sm text-foreground/60 mb-4">{tier.description}</p>
+                <p className="text-sm text-foreground/60 mb-4">
+                  {tier.description}
+                </p>
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-bold text-foreground">
                     {tier.price}
@@ -100,7 +102,9 @@ export default function PricingCards() {
                   {tier.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex gap-3 items-start">
                       <Check className="w-4 h-4 text-primary flex-shrink-0 mt-1" />
-                      <span className="text-sm text-foreground/80">{feature}</span>
+                      <span className="text-sm text-foreground/80">
+                        {feature}
+                      </span>
                     </li>
                   ))}
                 </ul>

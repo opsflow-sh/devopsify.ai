@@ -7,17 +7,26 @@ export default function Privacy() {
       <Header />
       <main className="flex-1 py-12">
         <div className="container max-w-3xl mx-auto px-4 prose prose-sm max-w-none">
-          <h1 className="text-4xl font-bold text-foreground mb-8">Privacy Policy</h1>
+          <h1 className="text-4xl font-bold text-foreground mb-8">
+            Privacy Policy
+          </h1>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-4">Introduction</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-4">
+              Introduction
+            </h2>
             <p className="text-foreground/70 leading-relaxed mb-4">
-              At Devopsify ("we," "us," or "our"), we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
+              At Devopsify ("we," "us," or "our"), we are committed to
+              protecting your privacy. This Privacy Policy explains how we
+              collect, use, disclose, and safeguard your information when you
+              visit our website and use our services.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-4">Information We Collect</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-4">
+              Information We Collect
+            </h2>
             <p className="text-foreground/70 leading-relaxed mb-4">
               We collect information you provide directly to us, such as:
             </p>
@@ -30,7 +39,9 @@ export default function Privacy() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-4">How We Use Your Information</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-4">
+              How We Use Your Information
+            </h2>
             <p className="text-foreground/70 leading-relaxed mb-4">
               We use the information we collect to:
             </p>
@@ -43,17 +54,28 @@ export default function Privacy() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-4">Data Security</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-4">
+              Data Security
+            </h2>
             <p className="text-foreground/70 leading-relaxed">
-              We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the internet is 100% secure.
+              We implement appropriate technical and organizational measures to
+              protect your personal information against unauthorized access,
+              alteration, disclosure, or destruction. However, no method of
+              transmission over the internet is 100% secure.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-4">Contact Us</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-4">
+              Contact Us
+            </h2>
             <p className="text-foreground/70 leading-relaxed">
-              If you have questions about this Privacy Policy or our privacy practices, please contact us at{" "}
-              <a href="mailto:privacy@devopsify.ai" className="text-primary hover:underline">
+              If you have questions about this Privacy Policy or our privacy
+              practices, please contact us at{" "}
+              <a
+                href="mailto:privacy@devopsify.ai"
+                className="text-primary hover:underline"
+              >
                 privacy@devopsify.ai
               </a>
             </p>

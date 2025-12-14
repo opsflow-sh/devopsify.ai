@@ -6,7 +6,11 @@ interface PlaceholderPageProps {
   icon: string;
 }
 
-export default function PlaceholderPage({ title, description, icon }: PlaceholderPageProps) {
+export default function PlaceholderPage({
+  title,
+  description,
+  icon,
+}: PlaceholderPageProps) {
   const location = useLocation();
 
   return (
@@ -21,7 +25,8 @@ export default function PlaceholderPage({ title, description, icon }: Placeholde
         </p>
         <div className="space-y-4">
           <p className="text-foreground/60">
-            This page is coming soon. To help us prioritize, let us know what you'd like to see here:
+            This page is coming soon. To help us prioritize, let us know what
+            you'd like to see here:
           </p>
           <a
             href="mailto:hello@devopsify.ai"
@@ -32,10 +37,13 @@ export default function PlaceholderPage({ title, description, icon }: Placeholde
           <div className="pt-4">
             <p className="text-sm text-foreground/60 mb-2">
               In the meantime, check out the{" "}
-              <a href="/" className="text-primary hover:underline font-semibold">
+              <a
+                href="/"
+                className="text-primary hover:underline font-semibold"
+              >
                 home page
-              </a>
-              {" "}for the full feature overview.
+              </a>{" "}
+              for the full feature overview.
             </p>
           </div>
         </div>

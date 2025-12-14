@@ -12,9 +12,13 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">D</span>
+                <span className="text-primary-foreground font-bold text-sm">
+                  D
+                </span>
               </div>
-              <span className="font-bold text-lg text-foreground">Devopsify</span>
+              <span className="font-bold text-lg text-foreground">
+                Devopsify
+              </span>
             </div>
             <p className="text-sm text-foreground/60">
               Helping builders ship responsibly.
@@ -25,13 +29,22 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             <h4 className="font-semibold text-foreground">Product</h4>
             <nav className="flex flex-col gap-2">
-              <Link to="/product" className="text-sm text-foreground/60 hover:text-foreground transition">
+              <Link
+                to="/product"
+                className="text-sm text-foreground/60 hover:text-foreground transition"
+              >
                 Features
               </Link>
-              <Link to="/pricing" className="text-sm text-foreground/60 hover:text-foreground transition">
+              <Link
+                to="/pricing"
+                className="text-sm text-foreground/60 hover:text-foreground transition"
+              >
                 Pricing
               </Link>
-              <Link to="/roadmap" className="text-sm text-foreground/60 hover:text-foreground transition">
+              <Link
+                to="/roadmap"
+                className="text-sm text-foreground/60 hover:text-foreground transition"
+              >
                 Roadmap
               </Link>
             </nav>
@@ -41,13 +54,22 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             <h4 className="font-semibold text-foreground">Company</h4>
             <nav className="flex flex-col gap-2">
-              <Link to="/faq" className="text-sm text-foreground/60 hover:text-foreground transition">
+              <Link
+                to="/faq"
+                className="text-sm text-foreground/60 hover:text-foreground transition"
+              >
                 FAQ
               </Link>
-              <Link to="/privacy" className="text-sm text-foreground/60 hover:text-foreground transition">
+              <Link
+                to="/privacy"
+                className="text-sm text-foreground/60 hover:text-foreground transition"
+              >
                 Privacy
               </Link>
-              <a href="#" className="text-sm text-foreground/60 hover:text-foreground transition">
+              <a
+                href="#"
+                className="text-sm text-foreground/60 hover:text-foreground transition"
+              >
                 Terms (Coming Soon)
               </a>
             </nav>

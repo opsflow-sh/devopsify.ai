@@ -76,9 +76,7 @@ export default function StepsTimeline() {
                       <h3 className="text-xl font-semibold text-foreground mb-1">
                         {step.number}. {step.title}
                       </h3>
-                      <p className="text-foreground/70">
-                        {step.description}
-                      </p>
+                      <p className="text-foreground/70">{step.description}</p>
                     </div>
                     {step.comingSoon && (
                       <Badge className="text-xs bg-primary/10 text-primary border-primary/30 whitespace-nowrap">

@@ -3,17 +3,20 @@ export default function ProblemCards() {
     {
       icon: "⚡",
       question: "What breaks if traffic spikes?",
-      description: "Understand your app's scaling limits and breaking points before they happen in production.",
+      description:
+        "Understand your app's scaling limits and breaking points before they happen in production.",
     },
     {
       icon: "🔐",
       question: "Where do secrets go?",
-      description: "Secure management of environment variables, credentials, and sensitive configuration data.",
+      description:
+        "Secure management of environment variables, credentials, and sensitive configuration data.",
     },
     {
       icon: "🚀",
       question: "How do I deploy outside Replit safely?",
-      description: "Clear deployment paths with best practices, templates, and opinionated guidance.",
+      description:
+        "Clear deployment paths with best practices, templates, and opinionated guidance.",
     },
   ];
 
@@ -26,7 +29,8 @@ export default function ProblemCards() {
             Replit helps you build. Production requires different questions.
           </h2>
           <p className="text-lg text-foreground/70">
-            Devopsify gives you a clear plan, generates the missing pieces, and explains every decision.
+            Devopsify gives you a clear plan, generates the missing pieces, and
+            explains every decision.
           </p>
         </div>
 

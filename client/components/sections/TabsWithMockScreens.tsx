@@ -22,7 +22,9 @@ export default function TabsWithMockScreens() {
             </div>
             <div>
               <p className="text-sm text-foreground/60">Production Readiness</p>
-              <p className="font-semibold text-foreground">Good foundation, minor improvements needed</p>
+              <p className="font-semibold text-foreground">
+                Good foundation, minor improvements needed
+              </p>
             </div>
           </div>
           <div className="space-y-2">
@@ -33,7 +35,10 @@ export default function TabsWithMockScreens() {
               { category: "Data handling", score: 71 },
               { category: "Cost efficiency", score: 68 },
             ].map((item) => (
-              <div key={item.category} className="flex items-center justify-between text-sm">
+              <div
+                key={item.category}
+                className="flex items-center justify-between text-sm"
+              >
                 <span className="text-foreground/70">{item.category}</span>
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-32 bg-border rounded-full overflow-hidden">
@@ -42,7 +47,9 @@ export default function TabsWithMockScreens() {
                       style={{ width: `${item.score}%` }}
                     ></div>
                   </div>
-                  <span className="text-foreground font-medium w-10">{item.score}</span>
+                  <span className="text-foreground font-medium w-10">
+                    {item.score}
+                  </span>
                 </div>
               </div>
             ))}
@@ -60,14 +67,36 @@ export default function TabsWithMockScreens() {
       ],
       mockContent: (
         <div className="space-y-6">
-          <p className="text-sm text-foreground/70">Risk Assessment by Category</p>
+          <p className="text-sm text-foreground/70">
+            Risk Assessment by Category
+          </p>
           <div className="grid grid-cols-2 gap-4">
             {[
-              { name: "Security", level: "High", color: "bg-red-100 text-red-900" },
-              { name: "Scaling", level: "Medium", color: "bg-yellow-100 text-yellow-900" },
-              { name: "Reliability", level: "Low", color: "bg-green-100 text-green-900" },
-              { name: "Data Loss", level: "Medium", color: "bg-yellow-100 text-yellow-900" },
-              { name: "Cost", level: "Low", color: "bg-green-100 text-green-900" },
+              {
+                name: "Security",
+                level: "High",
+                color: "bg-red-100 text-red-900",
+              },
+              {
+                name: "Scaling",
+                level: "Medium",
+                color: "bg-yellow-100 text-yellow-900",
+              },
+              {
+                name: "Reliability",
+                level: "Low",
+                color: "bg-green-100 text-green-900",
+              },
+              {
+                name: "Data Loss",
+                level: "Medium",
+                color: "bg-yellow-100 text-yellow-900",
+              },
+              {
+                name: "Cost",
+                level: "Low",
+                color: "bg-green-100 text-green-900",
+              },
               { name: "Ops", level: "High", color: "bg-red-100 text-red-900" },
             ].map((item) => (
               <div key={item.name} className={`p-4 rounded-lg ${item.color}`}>
@@ -89,7 +118,9 @@ export default function TabsWithMockScreens() {
       ],
       mockContent: (
         <div className="space-y-4">
-          <p className="text-sm text-foreground/70">Generated files ready for deployment</p>
+          <p className="text-sm text-foreground/70">
+            Generated files ready for deployment
+          </p>
           {[
             { name: "Dockerfile", size: "1.2 KB", generated: true },
             { name: ".env.example", size: "0.8 KB", generated: true },
@@ -98,11 +129,16 @@ export default function TabsWithMockScreens() {
             { name: "docker-compose.yml", size: "2.1 KB", generated: true },
             { name: "health-check.sh", size: "1.5 KB", generated: true },
           ].map((file) => (
-            <div key={file.name} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-border/60">
+            <div
+              key={file.name}
+              className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-border/60"
+            >
               <div className="flex items-center gap-3">
                 <Check className="w-4 h-4 text-primary" />
                 <div>
-                  <p className="text-sm font-semibold text-foreground">{file.name}</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    {file.name}
+                  </p>
                   <p className="text-xs text-foreground/60">{file.size}</p>
                 </div>
               </div>
@@ -126,16 +162,28 @@ export default function TabsWithMockScreens() {
       mockContent: (
         <div className="space-y-4 opacity-60">
           <div className="p-4 bg-slate-50 rounded-lg border border-border/60">
-            <p className="text-sm font-semibold text-foreground mb-2">Recommended: Fly.io</p>
-            <p className="text-xs text-foreground/70">Estimated cost: $7/month • Auto-scaling included</p>
+            <p className="text-sm font-semibold text-foreground mb-2">
+              Recommended: Fly.io
+            </p>
+            <p className="text-xs text-foreground/70">
+              Estimated cost: $7/month • Auto-scaling included
+            </p>
           </div>
           <div className="p-4 bg-slate-50 rounded-lg border border-border/60">
-            <p className="text-sm font-semibold text-foreground mb-2">Alternative: Cloud Run</p>
-            <p className="text-xs text-foreground/70">Estimated cost: $15/month • More configuration needed</p>
+            <p className="text-sm font-semibold text-foreground mb-2">
+              Alternative: Cloud Run
+            </p>
+            <p className="text-xs text-foreground/70">
+              Estimated cost: $15/month • More configuration needed
+            </p>
           </div>
           <div className="p-4 bg-slate-50 rounded-lg border border-border/60">
-            <p className="text-sm font-semibold text-foreground mb-2">Alternative: Railway</p>
-            <p className="text-xs text-foreground/70">Estimated cost: $10/month • Great for beginners</p>
+            <p className="text-sm font-semibold text-foreground mb-2">
+              Alternative: Railway
+            </p>
+            <p className="text-xs text-foreground/70">
+              Estimated cost: $10/month • Great for beginners
+            </p>
           </div>
         </div>
       ),
@@ -145,7 +193,10 @@ export default function TabsWithMockScreens() {
   const currentTab = tabs[activeTab];
 
   return (
-    <section id="demo-section" className="container max-w-7xl mx-auto px-4 py-20 md:py-28">
+    <section
+      id="demo-section"
+      className="container max-w-7xl mx-auto px-4 py-20 md:py-28"
+    >
       <div className="flex flex-col gap-12">
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center">
@@ -186,7 +237,9 @@ export default function TabsWithMockScreens() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Benefits */}
             <div className="flex flex-col gap-4">
-              <h3 className="text-lg font-semibold text-foreground">Key highlights</h3>
+              <h3 className="text-lg font-semibold text-foreground">
+                Key highlights
+              </h3>
               <ul className="space-y-3">
                 {currentTab.benefits.map((benefit, index) => (
                   <li key={index} className="flex gap-3">

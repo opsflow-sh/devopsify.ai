@@ -14,23 +14,39 @@ export default function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">D</span>
+              <span className="text-primary-foreground font-bold text-sm">
+                D
+              </span>
             </div>
-            <span className="font-bold text-lg text-foreground hidden sm:inline">Devopsify</span>
+            <span className="font-bold text-lg text-foreground hidden sm:inline">
+              Devopsify
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link to="/product" className="text-sm text-foreground/70 hover:text-foreground transition">
+            <Link
+              to="/product"
+              className="text-sm text-foreground/70 hover:text-foreground transition"
+            >
               Product
             </Link>
-            <Link to="/pricing" className="text-sm text-foreground/70 hover:text-foreground transition">
+            <Link
+              to="/pricing"
+              className="text-sm text-foreground/70 hover:text-foreground transition"
+            >
               Pricing
             </Link>
-            <Link to="/roadmap" className="text-sm text-foreground/70 hover:text-foreground transition">
+            <Link
+              to="/roadmap"
+              className="text-sm text-foreground/70 hover:text-foreground transition"
+            >
               Roadmap
             </Link>
-            <Link to="/faq" className="text-sm text-foreground/70 hover:text-foreground transition">
+            <Link
+              to="/faq"
+              className="text-sm text-foreground/70 hover:text-foreground transition"
+            >
               FAQ
             </Link>
           </nav>

@@ -20,7 +20,8 @@ export default function TwoColumnBenefits() {
                 Designed for Replit builders who want production outcomes.
               </h2>
               <p className="text-lg text-foreground/70">
-                We built Devopsify specifically for how you work—no corporate ceremonies, no overkill.
+                We built Devopsify specifically for how you work—no corporate
+                ceremonies, no overkill.
               </p>
             </div>
 
@@ -29,7 +30,9 @@ export default function TwoColumnBenefits() {
               {benefits.map((benefit, index) => (
                 <li key={index} className="flex gap-3 items-start">
                   <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                  <span className="text-foreground/80 leading-relaxed">{benefit}</span>
+                  <span className="text-foreground/80 leading-relaxed">
+                    {benefit}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -42,10 +45,12 @@ export default function TwoColumnBenefits() {
                 A graduation layer for Replit.
               </h3>
               <p className="text-foreground/70 leading-relaxed mb-6">
-                Devopsify bridges the gap between "it runs" and "it's operable". That's where builders churn—and where platforms win.
+                Devopsify bridges the gap between "it runs" and "it's operable".
+                That's where builders churn—and where platforms win.
               </p>
               <p className="text-sm text-foreground/60 italic">
-                By making production accessible, we help more builders succeed. Fewer abandoned projects. More shipped products.
+                By making production accessible, we help more builders succeed.
+                Fewer abandoned projects. More shipped products.
               </p>
             </div>
           </div>

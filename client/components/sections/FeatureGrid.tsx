@@ -19,7 +19,8 @@ export default function FeatureGrid() {
     {
       icon: Cpu,
       title: "App Intelligence Graph",
-      description: "Understands your stack, entrypoints, state and dependencies.",
+      description:
+        "Understands your stack, entrypoints, state and dependencies.",
       comingSoon: false,
     },
     {
@@ -96,7 +97,8 @@ export default function FeatureGrid() {
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Everything you need to graduate your app from prototype to operable service
+            Everything you need to graduate your app from prototype to operable
+            service
           </h2>
         </div>
 
@@ -117,7 +119,9 @@ export default function FeatureGrid() {
                     </Badge>
                   )}
                 </div>
-                <h3 className="font-semibold text-foreground">{feature.title}</h3>
+                <h3 className="font-semibold text-foreground">
+                  {feature.title}
+                </h3>
                 <p className="text-sm text-foreground/70 leading-relaxed">
                   {feature.description}
                 </p>

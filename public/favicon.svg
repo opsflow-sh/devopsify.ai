@@ -1,0 +1,18 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" fill="#f0f9ff" rx="24"/>
+  
+  <!-- Main gradient circle -->
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0284c7;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Blue square background -->
+  <rect x="32" y="32" width="64" height="64" rx="8" fill="url(#logoGradient)"/>
+  
+  <!-- White "D" letter -->
+  <text x="64" y="85" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="56" font-weight="700" fill="white" text-anchor="middle" dominant-baseline="middle">D</text>
+</svg>

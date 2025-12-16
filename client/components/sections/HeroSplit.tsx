@@ -82,7 +82,7 @@ export default function HeroSplit() {
               }}
               className="px-6 py-6 text-base font-semibold text-primary border border-primary/30 rounded-lg hover:bg-primary/5 transition"
             >
-              View sample report
+              View sample readiness report
             </button>
           </div>
 

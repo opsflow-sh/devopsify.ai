@@ -2,6 +2,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AnnouncementBar from "@/components/sections/AnnouncementBar";
 import HeroSplit from "@/components/sections/HeroSplit";
+import WorksEverywhere from "@/components/sections/WorksEverywhere";
 import SocialProof from "@/components/sections/SocialProof";
 import ProblemCards from "@/components/sections/ProblemCards";
 import StepsTimeline from "@/components/sections/StepsTimeline";
@@ -20,6 +21,7 @@ export default function Index() {
       <AnnouncementBar />
       <main className="flex-1">
         <HeroSplit />
+        <WorksEverywhere />
         <SocialProof />
         <ProblemCards />
         <StepsTimeline />

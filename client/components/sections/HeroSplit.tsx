@@ -1,20 +1,65 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 
 export default function HeroSplit() {
+  const [audience, setAudience] = useState<"vibe-coder" | "founder">("vibe-coder");
+
+  const messages = {
+    "vibe-coder": {
+      headline: "You built that cool app.",
+      subheadline: "Is it ready for the real world?",
+      copy: "Before you share it with the world, know what could go wrong. Get a clear picture of your app's readiness and what to watch out for.",
+    },
+    founder: {
+      headline: "From side project to real business.",
+      subheadline: "You've got paying users now.",
+      copy: "Your setup works—but will it scale? Get clarity on what to do next, without needing a DevOps degree.",
+    },
+  };
+
+  const current = messages[audience];
+
   return (
     <section className="container max-w-7xl mx-auto px-4 py-20 md:py-32">
+      {/* Audience Toggle (Subtle) */}
+      <div className="flex justify-center gap-2 mb-12">
+        <button
+          onClick={() => setAudience("vibe-coder")}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+            audience === "vibe-coder"
+              ? "bg-primary text-primary-foreground"
+              : "bg-primary/10 text-primary hover:bg-primary/20"
+          }`}
+        >
+          Vibe Coder
+        </button>
+        <button
+          onClick={() => setAudience("founder")}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+            audience === "founder"
+              ? "bg-primary text-primary-foreground"
+              : "bg-primary/10 text-primary hover:bg-primary/20"
+          }`}
+        >
+          Solo Founder
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center">
         {/* Left: Text Content */}
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-4">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
-              Ship your Replit app to production—without learning DevOps.
-            </h1>
+            <div>
+              <p className="text-sm font-semibold text-primary mb-2">
+                {current.subheadline}
+              </p>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
+                {current.headline}
+              </h1>
+            </div>
             <p className="text-lg md:text-xl text-foreground/70 leading-relaxed">
-              Devopsify is an agentic readiness engineer that audits your app,
-              generates production artifacts, and gives an explainable path to
-              deploy and operate safely.
+              {current.copy}
             </p>
           </div>
 
@@ -27,7 +72,7 @@ export default function HeroSplit() {
               }}
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-6 text-base font-semibold"
             >
-              Join the waitlist
+              Check readiness
             </Button>
             <button
               onClick={() => {
@@ -37,14 +82,13 @@ export default function HeroSplit() {
               }}
               className="px-6 py-6 text-base font-semibold text-primary border border-primary/30 rounded-lg hover:bg-primary/5 transition"
             >
-              View sample readiness report
+              View sample report
             </button>
           </div>
 
           {/* Microcopy */}
           <p className="text-sm text-foreground/60 leading-relaxed">
-            Built for Replit-style projects. GitHub export supported. No cloud
-            credentials required.
+            Works with any vibe-coded app. GitHub, Vercel, Replit, Lovable, Builder.io, Netlify + more. No cloud credentials required.
           </p>
 
           {/* Trust Badges */}

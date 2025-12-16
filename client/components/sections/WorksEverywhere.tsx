@@ -1,53 +1,53 @@
 import { Badge } from "@/components/ui/badge";
-import { Github, Globe, Cloud, Zap } from "lucide-react";
+import { Github, Cloud, Zap, Layers, Globe, Gauge, Cpu, Rocket } from "lucide-react";
 
 export default function WorksEverywhere() {
   const platforms = [
     {
       name: "Replit",
-      icon: "🐍",
+      icon: Layers,
       description: "Replit Projects, Deployments, agents",
       category: "Vibe Coding",
     },
     {
       name: "Lovable",
-      icon: "💕",
+      icon: Zap,
       description: "Full-stack apps with AI generation",
       category: "Vibe Coding",
     },
     {
       name: "Vercel",
-      icon: "▲",
+      icon: Globe,
       description: "Next.js, frontend, full-stack",
       category: "Popular Platforms",
     },
     {
       name: "Netlify",
-      icon: "◆",
+      icon: Cloud,
       description: "Static sites, functions, edge compute",
       category: "Popular Platforms",
     },
     {
       name: "Builder.io",
-      icon: "⚙️",
+      icon: Cpu,
       description: "Visual and programmatic builds",
       category: "Popular Platforms",
     },
     {
       name: "GitHub",
-      icon: "⚫",
+      icon: Github,
       description: "Any GitHub repo, any language",
       category: "Version Control",
     },
     {
       name: "Railway",
-      icon: "🚂",
+      icon: Gauge,
       description: "Containerized apps, databases",
       category: "Deployment",
     },
     {
       name: "Fly.io",
-      icon: "🪁",
+      icon: Rocket,
       description: "Global edge infrastructure",
       category: "Deployment",
     },

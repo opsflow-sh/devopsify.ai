@@ -72,14 +72,14 @@ export default function WorksEverywhere() {
           {/* Platforms Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {platforms.map((platform, index) => {
-              const Icon = platform.icon;
+              const IconComponent = platform.icon;
               return (
                 <div
                   key={index}
                   className="bg-background rounded-lg p-6 border border-border/60 hover:border-primary/40 transition flex flex-col gap-3"
                 >
                   <div className="flex items-center justify-between">
-                    <Icon className="w-6 h-6 text-primary" />
+                    <IconComponent className="w-6 h-6 text-primary" />
                     <Badge variant="outline" className="text-xs">
                       {platform.category}
                     </Badge>

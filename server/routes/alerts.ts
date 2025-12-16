@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 /**
  * GET /api/alerts
  * Fetch alerts for current user
- * 
+ *
  * Query: { analysisId?, limit=20, offset=0 }
  * Headers: Authorization: Bearer {sessionToken}
  * Response: { alerts: Alert[], total: number }
@@ -33,7 +33,7 @@ export async function handleGetAlerts(req: Request, res: Response) {
 /**
  * PATCH /api/alerts/:alertId/read
  * Mark alert as read
- * 
+ *
  * Headers: Authorization: Bearer {sessionToken}
  * Response: { alert: Alert }
  */

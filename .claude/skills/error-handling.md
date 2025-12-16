@@ -1,6 +1,7 @@
 # Claude Code Skill: Error Handling & Resilience
 
 ## Overview
+
 Graceful failures with helpful error messages. Never expose implementation details to users.
 
 ## Core Pattern
@@ -8,7 +9,10 @@ Graceful failures with helpful error messages. Never expose implementation detai
 **Every async function should follow this pattern:**
 
 ```typescript
-export async function handleSomething(req: Request, res: Response): Promise<void> {
+export async function handleSomething(
+  req: Request,
+  res: Response,
+): Promise<void> {
   try {
     // 1. Validate input
     const validation = someSchema.safeParse(req.body);
@@ -21,7 +25,10 @@ export async function handleSomething(req: Request, res: Response): Promise<void
 
     // 2. Check authorization
     const userId = (req as any).userId;
-    const resource = await getOne("SELECT user_id FROM resources WHERE id = $1", [resourceId]);
+    const resource = await getOne(
+      "SELECT user_id FROM resources WHERE id = $1",
+      [resourceId],
+    );
     if (resource?.user_id !== userId) {
       return res.status(403).json({ error: "Forbidden" });
     }
@@ -34,15 +41,15 @@ export async function handleSomething(req: Request, res: Response): Promise<void
   } catch (error) {
     // 5. Handle errors gracefully
     console.error("Failed in handleSomething:", error);
-    
+
     if (error instanceof ValidationError) {
       return res.status(400).json({ error: error.message });
     }
-    
+
     if (error instanceof NotFoundError) {
       return res.status(404).json({ error: "Not found" });
     }
-    
+
     // Generic fallback
     res.status(500).json({ error: "Something went wrong. Please try again." });
   }
@@ -134,7 +141,10 @@ if (!token) {
 
 ```typescript
 // User doesn't own resource
-const analysis = await getOne("SELECT user_id FROM app_analyses WHERE id = $1", [id]);
+const analysis = await getOne(
+  "SELECT user_id FROM app_analyses WHERE id = $1",
+  [id],
+);
 if (analysis?.user_id !== userId) {
   // Don't reveal why
   return res.status(403).json({ error: "Forbidden" });
@@ -142,7 +152,9 @@ if (analysis?.user_id !== userId) {
 
 // Insufficient permissions
 if (user.plan !== "production_plus") {
-  return res.status(403).json({ error: "This feature requires Production+ plan" });
+  return res
+    .status(403)
+    .json({ error: "This feature requires Production+ plan" });
 }
 ```
 
@@ -181,7 +193,7 @@ try {
     userId,
     error: error instanceof Error ? error.message : String(error),
   });
-  
+
   res.status(500).json({ error: "Something went wrong. Please try again." });
 }
 ```
@@ -223,10 +235,10 @@ console.log("Auth attempt for:", email); // No password
 export async function handleCreateUser(req: Request, res: Response) {
   try {
     const { email, password, name } = req.body;
-    
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await createUser(email, hashedPassword, name);
-    
+
     res.json({ user });
   } catch (error) {
     // Check for specific database errors
@@ -235,14 +247,16 @@ export async function handleCreateUser(req: Request, res: Response) {
         // Duplicate email
         return res.status(409).json({ error: "Email already registered" });
       }
-      
+
       if (error.message.includes("connection refused")) {
         // Database down
         console.error("Database connection failed:", error);
-        return res.status(503).json({ error: "Service temporarily unavailable" });
+        return res
+          .status(503)
+          .json({ error: "Service temporarily unavailable" });
       }
     }
-    
+
     // Generic error
     console.error("Failed to create user:", error);
     res.status(500).json({ error: "Signup failed. Please try again." });
@@ -264,12 +278,12 @@ try {
     if (error.message.includes("404")) {
       return res.status(404).json({ error: "Repository not found" });
     }
-    
+
     if (error.message.includes("rate limit")) {
       return res.status(429).json({ error: "Too many requests. Please try again later." });
     }
   }
-  
+
   console.error("GitHub API error:", error);
   res.status(500).json({ error: "Failed to fetch repository" });
 }
@@ -281,7 +295,7 @@ try {
   if (error instanceof Stripe.errors.StripeInvalidRequestError) {
     return res.status(400).json({ error: error.message });
   }
-  
+
   console.error("Stripe error:", error);
   res.status(500).json({ error: "Payment processing failed" });
 }
@@ -309,8 +323,8 @@ export function WatchDashboard() {
       <Alert variant="destructive">
         <AlertTitle>Failed to load analysis</AlertTitle>
         <AlertDescription>
-          {error instanceof Error 
-            ? error.message 
+          {error instanceof Error
+            ? error.message
             : "Please try refreshing the page."}
         </AlertDescription>
       </Alert>
@@ -328,27 +342,25 @@ export function WatchDashboard() {
 ```typescript
 async function retryWithBackoff<T>(
   fn: () => Promise<T>,
-  maxRetries = 3
+  maxRetries = 3,
 ): Promise<T> {
   let lastError: Error;
-  
+
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       return await fn();
     } catch (error) {
       lastError = error as Error;
       const delayMs = Math.pow(2, attempt) * 1000; // 1s, 2s, 4s
-      await new Promise(resolve => setTimeout(resolve, delayMs));
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
     }
   }
-  
+
   throw lastError!;
 }
 
 // Usage
-const analysis = await retryWithBackoff(
-  () => cloneGitHubRepo(repoUrl)
-);
+const analysis = await retryWithBackoff(() => cloneGitHubRepo(repoUrl));
 ```
 
 ### Timeout Protection
@@ -356,15 +368,12 @@ const analysis = await retryWithBackoff(
 ```typescript
 async function withTimeout<T>(
   promise: Promise<T>,
-  timeoutMs: number
+  timeoutMs: number,
 ): Promise<T> {
   return Promise.race([
     promise,
     new Promise<T>((_, reject) =>
-      setTimeout(
-        () => reject(new Error("Operation timed out")),
-        timeoutMs
-      )
+      setTimeout(() => reject(new Error("Operation timed out")), timeoutMs),
     ),
   ]);
 }
@@ -372,7 +381,7 @@ async function withTimeout<T>(
 // Usage
 const analysis = await withTimeout(
   analyzeApp(repoUrl),
-  30000 // 30 seconds
+  30000, // 30 seconds
 );
 ```
 
@@ -388,4 +397,3 @@ const analysis = await withTimeout(
 - [ ] Error responses use consistent format
 - [ ] 500 errors return generic message
 - [ ] All error paths tested
-

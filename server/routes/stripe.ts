@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 /**
  * POST /api/stripe/checkout
  * Create Stripe checkout session
- * 
+ *
  * Body: { analysisId, planId }
  * Headers: Authorization: Bearer {sessionToken}
  * Response: { checkoutUrl: string }
@@ -38,7 +38,7 @@ export async function handleCreateCheckout(req: Request, res: Response) {
 /**
  * POST /api/stripe/webhook
  * Handle Stripe webhook events
- * 
+ *
  * This endpoint is called by Stripe for events:
  * - charge.succeeded
  * - customer.subscription.created
@@ -73,7 +73,7 @@ export async function handleStripeWebhook(req: Request, res: Response) {
 /**
  * GET /api/stripe/subscription
  * Get current subscription status
- * 
+ *
  * Headers: Authorization: Bearer {sessionToken}
  * Response: { subscription: WatchModeSubscription | null }
  */

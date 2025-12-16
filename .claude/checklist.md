@@ -169,4 +169,3 @@ Copy this for each commit:
 - [ ] Tests passing
 - [ ] TypeScript check passing
 ```
-

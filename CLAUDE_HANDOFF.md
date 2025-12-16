@@ -5,6 +5,7 @@ This document defines exactly what to build, in what order, with clear contracts
 ---
 
 ## Table of Contents
+
 1. [Architecture Overview](#architecture-overview)
 2. [Database Setup](#database-setup)
 3. [Phase 1: Core Services](#phase-1-core-services)
@@ -43,16 +44,20 @@ Shared (TypeScript)
 ## Database Setup
 
 ### Prerequisites
+
 - PostgreSQL 13+ (local or remote)
 - Environment variable: `DATABASE_URL=postgresql://user:password@host:port/dbname`
 
 ### Step 1: Create Database
+
 ```bash
 createdb devopsify
 ```
 
 ### Step 2: Run Schema
+
 Execute the SQL in `server/db/schema.sql` to create all tables:
+
 - `users` - User accounts
 - `app_analyses` - Analysis records
 - `watch_mode_subscriptions` - Subscriptions
@@ -63,9 +68,11 @@ Execute the SQL in `server/db/schema.sql` to create all tables:
 - `sessions` - Session tokens
 
 ### Step 3: Seed Reference Data
+
 Insert these into `risk_scenarios`, `platform_recommendations`, `next_best_steps`:
 
 **risk_scenarios** (top 5 for MVP):
+
 ```sql
 INSERT INTO risk_scenarios (title, plain_explanation, trigger_condition, user_symptom, severity, "order")
 VALUES
@@ -77,16 +84,18 @@ VALUES
 ```
 
 **platform_recommendations** (at least Replit for MVP):
+
 ```sql
 INSERT INTO platform_recommendations (platform_id, platform_name, recommended_badge, why_bullets, when_it_changes, confidence_note)
 VALUES
-('replit', 'Replit Deployments', '✅ Recommended right now', 
- '["Handles your current usage well", "Keeps things simple while you grow"]', 
- 'If usage grows 5–10×, this setup may need an upgrade.', 
+('replit', 'Replit Deployments', '✅ Recommended right now',
+ '["Handles your current usage well", "Keeps things simple while you grow"]',
+ 'If usage grows 5–10×, this setup may need an upgrade.',
  'You''re not missing out by staying here.');
 ```
 
 **next_best_steps** (3 variants for MVP):
+
 ```sql
 INSERT INTO next_best_steps (mode, headline, explanation, cta_text, upgrade_required)
 VALUES
@@ -96,6 +105,7 @@ VALUES
 ```
 
 **pricing_plans** (3 tiers for MVP):
+
 ```sql
 INSERT INTO pricing_plans (name, price_cents, currency, billing_period, features, status, stripe_price_id)
 VALUES
@@ -111,10 +121,11 @@ VALUES
 These are the "intelligence" services that make DevOpsify unique. No UI yet.
 
 ### Service 1: Database Client
+
 **File:** `server/db/client.ts`
 
 ```typescript
-import { Pool } from 'pg';
+import { Pool } from "pg";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -131,12 +142,18 @@ export async function query(text: string, params?: unknown[]) {
   }
 }
 
-export async function getOne<T>(text: string, params?: unknown[]): Promise<T | null> {
+export async function getOne<T>(
+  text: string,
+  params?: unknown[],
+): Promise<T | null> {
   const result = await query(text, params);
   return result.rows[0] || null;
 }
 
-export async function getMany<T>(text: string, params?: unknown[]): Promise<T[]> {
+export async function getMany<T>(
+  text: string,
+  params?: unknown[],
+): Promise<T[]> {
   const result = await query(text, params);
   return result.rows;
 }
@@ -146,15 +163,18 @@ export async function executeOne(text: string, params?: unknown[]) {
 }
 ```
 
-**Contract:** 
+**Contract:**
+
 - Must use `pg` library (already in dependencies)
 - Must support parameterized queries to prevent SQL injection
 - Must handle connection pooling
 
 ### Service 2: App Understanding Engine
+
 **File:** `server/services/appUnderstanding.ts`
 
 **Input Contract:**
+
 ```typescript
 interface AppContent {
   files: Map<string, string>; // filename -> file contents
@@ -164,45 +184,51 @@ interface AppContent {
 ```
 
 **Output Contract:**
+
 ```typescript
-async function detectStack(appContent: AppContent): Promise<StackProfile>
+async function detectStack(appContent: AppContent): Promise<StackProfile>;
 // Returns: { runtime, framework, database, databases[], external_apis[], has_background_jobs, has_file_uploads, deployment_platform }
 // Examples:
 // Node.js + Express + PostgreSQL = { runtime: 'node', framework: 'express', database: 'postgresql', ... }
 // Python + Flask + SQLite = { runtime: 'python', framework: 'flask', database: 'sqlite', ... }
 
-async function analyzePatterns(appContent: AppContent): Promise<BehaviorProfile>
+async function analyzePatterns(
+  appContent: AppContent,
+): Promise<BehaviorProfile>;
 // Returns: { is_stateful, write_heavy, has_background_jobs, has_file_uploads, estimated_concurrency_risk, external_dependency_count }
 // is_stateful: true if app stores state in memory, files, or sessions
 // write_heavy: true if write operations > read operations significantly
 // estimated_concurrency_risk: 'low' | 'medium' | 'high' based on database + patterns
 
-async function parseZipUpload(zipBuffer: Buffer): Promise<AppContent>
+async function parseZipUpload(zipBuffer: Buffer): Promise<AppContent>;
 // Use 'unzipper' or 'adm-zip' library
 // Skip: node_modules/, .git/, .next/, dist/, build/, __pycache__/
 // Include: package.json, requirements.txt, main source files
 
-async function cloneGitHubRepo(githubUrl: string): Promise<AppContent>
+async function cloneGitHubRepo(githubUrl: string): Promise<AppContent>;
 // Use 'octokit' to fetch repo contents via GitHub API
 // Recursively fetch up to 5MB of source code (skip binaries, large files)
 // Cache the result for 10 minutes to avoid rate limits
 ```
 
 **Implementation Notes:**
+
 - Stack detection: Look for imports, dependencies, config files
 - Pattern analysis: Count write/read patterns in code, search for specific libraries
 - Must handle multiple stacks (Node, Python, Go, etc) but Node is priority
 - Keep logic ~300 lines, not a monster file
 
 ### Service 3: Judgment Engine (The Moat)
+
 **File:** `server/services/judgmentEngine.ts`
 
 **Core Contract:**
+
 ```typescript
 async function calculateLaunchConfidence(
   stackProfile: StackProfile,
-  behaviorProfile: BehaviorProfile
-): Promise<{ score: number; factors: string[] }>
+  behaviorProfile: BehaviorProfile,
+): Promise<{ score: number; factors: string[] }>;
 
 // Algorithm:
 // - Statefulness: stateless = +30, stateful = +10
@@ -210,14 +236,14 @@ async function calculateLaunchConfidence(
 // - Dependencies: < 3 = +20, 3-5 = +10, > 5 = +5
 // - Concurrency: low = +20, medium = +10, high = +5
 // Total: 0-100
-// 
+//
 // Example: 30 + 30 + 20 + 20 = 100 (safe)
 // Example: 10 + 10 + 10 + 10 = 40 (not ready)
 
 async function detectRisks(
   stackProfile: StackProfile,
-  behaviorProfile: BehaviorProfile
-): Promise<RiskScenario[]>
+  behaviorProfile: BehaviorProfile,
+): Promise<RiskScenario[]>;
 
 // Algorithm:
 // 1. Load top 5 risks from risk_scenarios table
@@ -231,8 +257,8 @@ async function detectRisks(
 async function recommendPlatform(
   stackProfile: StackProfile,
   behaviorProfile: BehaviorProfile,
-  currentPlatform?: string
-): Promise<PlatformRecommendation>
+  currentPlatform?: string,
+): Promise<PlatformRecommendation>;
 
 // Algorithm:
 // 1. If currentPlatform provided and still fits = recommend staying
@@ -243,38 +269,41 @@ async function recommendPlatform(
 async function recommendNextStep(
   stackProfile: StackProfile,
   behaviorProfile: BehaviorProfile,
-  stage: 'mvp' | 'watch' | 'growth' | 'production'
-): Promise<NextBestStepRecommendation>
+  stage: "mvp" | "watch" | "growth" | "production",
+): Promise<NextBestStepRecommendation>;
 
 // Algorithm:
 // MVP stage: "do_nothing" or "watch_one_thing"
 // Watch stage: "watch_one_thing" or "small_upgrade"
 // Growth: "small_upgrade" (Phase 1)
 // Production: multi-phase approach
-// 
+//
 // Key: ONE action only, never overwhelming
 ```
 
 **Implementation Notes:**
+
 - All outputs must be plain English, NO jargon (no "orchestration", "containerization", etc)
 - Confidence score must be deterministic (same input = same output)
 - Risks should be sorted by user impact, not technical severity
 - Platform recommendation should be neutral (not pushing away from Replit)
 
 ### Service 4: Alert Orchestrator
+
 **File:** `server/services/alertOrchestrator.ts`
 
 **Contract:**
+
 ```typescript
 async function evaluateAlerts(
   analysisId: string,
   userId: string,
   newProfile: BehaviorProfile,
-  previousProfile?: BehaviorProfile
-): Promise<Alert[]>
+  previousProfile?: BehaviorProfile,
+): Promise<Alert[]>;
 
 // Returns only alerts that SHOULD be sent, not all possible alerts
-// 
+//
 // Rules:
 // 1. Max 1 alert per category per 7 days (check database)
 // 2. Only fire if correlation >= 2 signals
@@ -297,12 +326,13 @@ async function evaluateAlerts(
 Connect services to HTTP endpoints.
 
 ### Route 1: POST /api/auth/signup
+
 **File:** `server/routes/auth.ts`
 
 ```typescript
 // Input: { email, password, name }
 // Output: { userId, sessionToken }
-// 
+//
 // Logic:
 // 1. Validate email format
 // 2. Hash password (bcrypt)
@@ -314,6 +344,7 @@ Connect services to HTTP endpoints.
 ```
 
 ### Route 2: POST /api/analyze
+
 **File:** `server/routes/analyze.ts`
 
 ```typescript
@@ -332,6 +363,7 @@ Connect services to HTTP endpoints.
 ```
 
 ### Route 3: GET /api/analyze/:analysisId
+
 **File:** `server/routes/analyze.ts`
 
 ```typescript
@@ -345,6 +377,7 @@ Connect services to HTTP endpoints.
 ```
 
 ### Route 4: POST /api/analyze/:analysisId/recheck
+
 **File:** `server/routes/analyze.ts`
 
 ```typescript
@@ -361,6 +394,7 @@ Connect services to HTTP endpoints.
 ```
 
 ### Route 5: POST /api/subscribe
+
 **File:** `server/routes/stripe.ts`
 
 ```typescript
@@ -375,6 +409,7 @@ Connect services to HTTP endpoints.
 ```
 
 ### Route 6: GET /api/alerts
+
 **File:** `server/routes/alerts.ts`
 
 ```typescript
@@ -396,6 +431,7 @@ Build the user-facing app, stage by stage.
 ### Shell Components
 
 **File:** `client/components/app/AppShell.tsx`
+
 ```typescript
 // Layout wrapper for authenticated app
 // Props: { children, showNav?, activeStep? }
@@ -404,6 +440,7 @@ Build the user-facing app, stage by stage.
 ```
 
 **File:** `client/components/app/ProgressIndicator.tsx`
+
 ```typescript
 // Shows FTUE progress (Step 1-6)
 // Props: { currentStep: 1 | 2 | 3 | 4 | 5 | 6, labels: string[] }
@@ -413,9 +450,10 @@ Build the user-facing app, stage by stage.
 ### FTUE Pages (Priority 1)
 
 **File:** `client/pages/app/Connect.tsx` (Route: /app/connect)
+
 ```typescript
 // Screen 1: Connect your app
-// 
+//
 // Elements:
 // - Form with 2 inputs: GitHub URL, ZIP upload
 // - Helper text: "Read-only", "No cloud access", "Takes ~30 seconds"
@@ -430,9 +468,10 @@ Build the user-facing app, stage by stage.
 ```
 
 **File:** `client/pages/app/Analyzing.tsx` (Route: /app/analyzing)
+
 ```typescript
 // Screen 2: Analysis in progress
-// 
+//
 // Elements:
 // - Title: "Quick check in progress"
 // - 3 animated steps:
@@ -449,9 +488,10 @@ Build the user-facing app, stage by stage.
 ```
 
 **File:** `client/pages/app/LaunchVerdict.tsx` (Route: /app/report/launch)
+
 ```typescript
 // Screen 3: THE AHA MOMENT - "Is your app safe to share?"
-// 
+//
 // Elements:
 // - Status badge: 🟢 Safe | 🟡 Mostly safe | 🔴 Not yet
 // - Confidence meter: 72/100 with label
@@ -462,9 +502,10 @@ Build the user-facing app, stage by stage.
 ```
 
 **File:** `client/pages/app/RisksScreen.tsx` (Route: /app/report/risks)
+
 ```typescript
 // Screen 4: "What could go wrong?"
-// 
+//
 // Elements:
 // - Title
 // - Max 3 risk cards:
@@ -478,9 +519,10 @@ Build the user-facing app, stage by stage.
 ```
 
 **File:** `client/pages/app/PlatformFit.tsx` (Route: /app/report/platform)
+
 ```typescript
 // Screen 5: "Is this the right setup for you right now?"
-// 
+//
 // Elements:
 // - Recommendation card:
 //   - ✅ Recommended: [Platform name]
@@ -492,9 +534,10 @@ Build the user-facing app, stage by stage.
 ```
 
 **File:** `client/pages/app/NextStep.tsx` (Route: /app/report/next)
+
 ```typescript
 // Screen 6: "What should you do next?"
-// 
+//
 // Elements:
 // - One of three cards:
 //   - Mode "do_nothing": Nothing right now
@@ -509,9 +552,10 @@ Build the user-facing app, stage by stage.
 ### Upgrade & Subscription
 
 **File:** `client/pages/app/Upgrade.tsx` (Route: /upgrade)
+
 ```typescript
 // Subscription pitch screen
-// 
+//
 // Elements:
 // - Title: "Want us to keep watching this app?"
 // - Copy about peace of mind
@@ -529,9 +573,10 @@ Build the user-facing app, stage by stage.
 ### Watch Mode Dashboard
 
 **File:** `client/pages/app/WatchDashboard.tsx` (Route: /app/watch)
+
 ```typescript
 // Main dashboard for active users
-// 
+//
 // Elements:
 // - Status: 🟢 All good right now
 // - Last checked: "2 hours ago"
@@ -547,9 +592,10 @@ Build the user-facing app, stage by stage.
 ```
 
 **File:** `client/pages/app/AlertsCenter.tsx` (Route: /app/alerts)
+
 ```typescript
 // Alert history and explanations
-// 
+//
 // Elements:
 // - Alert list (paginated)
 // - Each alert:
@@ -573,9 +619,10 @@ These come after core FTUE is working.
 ### Stage 2: Growth Readiness
 
 **File:** `client/pages/app/GrowthReadiness.tsx` (Route: /app/growth-readiness)
+
 ```typescript
 // Unlocked when usage or cost alerts fire
-// 
+//
 // Content from spec 08:
 // - "Your app is growing — let's get ahead of it"
 // - What changed
@@ -586,6 +633,7 @@ These come after core FTUE is working.
 ```
 
 **File:** `server/services/changeGenerator.ts`
+
 ```typescript
 // Generates Phase 1, 2, 3 prepared changes
 //
@@ -607,9 +655,10 @@ These come after core FTUE is working.
 ### Stage 3: Production Maturity
 
 **File:** `client/pages/app/ProductionMaturity.tsx` (Route: /app/production)
+
 ```typescript
 // Unlocked when sustained growth detected
-// 
+//
 // Content from spec 08:
 // - "This is now a real product"
 // - What you've outgrown
@@ -621,6 +670,7 @@ These come after core FTUE is working.
 ### Vibe Code Spec Generator
 
 **File:** `server/services/vibeSpecGenerator.ts`
+
 ```typescript
 // Generates build specs for vibe coding tools
 //
@@ -641,9 +691,10 @@ These come after core FTUE is working.
 ```
 
 **File:** `client/pages/app/VibeSpec.tsx` (Route: /app/spec)
+
 ```typescript
 // Display + copy vibe code spec
-// 
+//
 // Elements:
 // - Spec sections (expandable)
 // - Copy buttons for different tools (Cursor, Replit, Claude)
@@ -744,28 +795,36 @@ WatchModeSubscription {
 ## API Contracts
 
 ### Authentication
-Every /app/* endpoint requires:
+
+Every /app/\* endpoint requires:
+
 ```
 Authorization: Bearer {sessionToken}
 ```
 
 Middleware to implement:
+
 ```typescript
 // server/middleware/auth.ts
 async function requireAuth(req, res, next) {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  
-  const session = await getOne('SELECT * FROM sessions WHERE id = $1 AND expires_at > NOW()', [token]);
-  if (!session) return res.status(401).json({ error: 'Session expired' });
-  
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+  const session = await getOne(
+    "SELECT * FROM sessions WHERE id = $1 AND expires_at > NOW()",
+    [token],
+  );
+  if (!session) return res.status(401).json({ error: "Session expired" });
+
   req.userId = session.user_id;
   next();
 }
 ```
 
 ### Error Responses
+
 All errors use standard format:
+
 ```typescript
 {
   error: string,
@@ -786,18 +845,21 @@ Status codes:
 ## Implementation Order
 
 ### Week 1: Foundation
+
 1. Database setup (schema + seed data)
 2. Database client (`server/db/client.ts`)
 3. Auth routes (signup, login, session)
 4. App Understanding service (stack detection, pattern analysis)
 
 ### Week 2: Core Logic
+
 1. Judgment Engine service (confidence, risks, platform, next step)
 2. Alert Orchestrator service
 3. Analyze API route (POST /api/analyze)
 4. Get Analysis API route (GET /api/analyze/:analysisId)
 
 ### Week 3: Frontend FTUE
+
 1. AppShell + ProgressIndicator components
 2. Connect screen
 3. Analyzing screen
@@ -805,12 +867,14 @@ Status codes:
 5. Risks, Platform, NextStep screens
 
 ### Week 4: Subscription & Dashboard
+
 1. Upgrade screen + Stripe integration
 2. Watch Mode dashboard
 3. Alerts center
 4. Recheck analysis endpoint
 
 ### Week 5+: Advanced
+
 1. Change Generator service
 2. Growth Readiness screens
 3. Production Maturity screens
@@ -864,6 +928,7 @@ shared/
 ## Environment Variables
 
 Add to `.env`:
+
 ```
 DATABASE_URL=postgresql://user:password@localhost:5432/devopsify
 STRIPE_SECRET_KEY=sk_test_XXXX

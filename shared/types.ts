@@ -87,7 +87,12 @@ export interface Alert {
   id: string;
   user_id: string;
   analysis_id: string;
-  category: "usage_growth" | "cost_risk" | "architecture_drift" | "platform_suitability" | "stability_regression";
+  category:
+    | "usage_growth"
+    | "cost_risk"
+    | "architecture_drift"
+    | "platform_suitability"
+    | "stability_regression";
   severity: "informational" | "heads_up" | "action_soon";
   title: string;
   body: string;

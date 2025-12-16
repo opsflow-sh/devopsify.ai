@@ -14,7 +14,7 @@ import type {
  */
 export async function calculateLaunchConfidence(
   stackProfile: StackProfile,
-  behaviorProfile: BehaviorProfile
+  behaviorProfile: BehaviorProfile,
 ): Promise<{
   score: number;
   factors: string[];
@@ -45,7 +45,7 @@ export async function calculateLaunchConfidence(
  */
 export async function detectRisks(
   stackProfile: StackProfile,
-  behaviorProfile: BehaviorProfile
+  behaviorProfile: BehaviorProfile,
 ): Promise<RiskScenario[]> {
   // TODO: Claude Code to implement:
   // Risk detection logic (from spec 02, 07):
@@ -83,7 +83,7 @@ export async function detectRisks(
 export async function recommendPlatform(
   stackProfile: StackProfile,
   behaviorProfile: BehaviorProfile,
-  currentPlatform?: string
+  currentPlatform?: string,
 ): Promise<PlatformRecommendation> {
   // TODO: Claude Code to implement:
   // Platform recommendation logic:
@@ -107,7 +107,10 @@ export async function recommendPlatform(
     platform_id: "replit",
     platform_name: "Replit",
     recommended_badge: "✅ Recommended right now",
-    why_bullets: ["Handles your current usage well", "Keeps things simple while you grow"],
+    why_bullets: [
+      "Handles your current usage well",
+      "Keeps things simple while you grow",
+    ],
     when_it_changes: "If usage grows 5–10×, this setup may need an upgrade.",
     confidence_note: "You're not missing out by staying here.",
   };
@@ -120,7 +123,7 @@ export async function recommendPlatform(
 export async function recommendNextStep(
   stackProfile: StackProfile,
   behaviorProfile: BehaviorProfile,
-  stage: "mvp" | "watch" | "growth" | "production"
+  stage: "mvp" | "watch" | "growth" | "production",
 ): Promise<NextBestStepRecommendation> {
   // TODO: Claude Code to implement:
   // Next step recommendation logic:
@@ -153,7 +156,7 @@ export async function recommendNextStep(
  * This is the output shown to users
  */
 export async function generateLaunchVerdict(
-  analysis: AppAnalysis
+  analysis: AppAnalysis,
 ): Promise<LaunchVerdict> {
   // TODO: Claude Code to implement:
   // 1. Call calculateLaunchConfidence()
@@ -173,7 +176,8 @@ export async function generateLaunchVerdict(
     analysis_id: analysis.id,
     status: "safe",
     confidence_score: 72,
-    one_line_summary: "Your app is safe to share. If usage grows quickly, one part may slow things down.",
+    one_line_summary:
+      "Your app is safe to share. If usage grows quickly, one part may slow things down.",
     risks: [],
     platform_recommendation: {} as PlatformRecommendation,
     next_best_step: {} as NextBestStepRecommendation,

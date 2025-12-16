@@ -3,10 +3,23 @@ import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleWaitlist } from "./routes/waitlist";
-import { handleSignup, handleLogin, handleGetMe, handleLogout } from "./routes/auth";
-import { handleAnalyze, handleGetAnalysis, handleRecheckAnalysis } from "./routes/analyze";
+import {
+  handleSignup,
+  handleLogin,
+  handleGetMe,
+  handleLogout,
+} from "./routes/auth";
+import {
+  handleAnalyze,
+  handleGetAnalysis,
+  handleRecheckAnalysis,
+} from "./routes/analyze";
 import { handleGetAlerts, handleMarkAlertAsRead } from "./routes/alerts";
-import { handleCreateCheckout, handleStripeWebhook, handleGetSubscription } from "./routes/stripe";
+import {
+  handleCreateCheckout,
+  handleStripeWebhook,
+  handleGetSubscription,
+} from "./routes/stripe";
 
 // TODO: Implement auth middleware
 // This should verify sessionToken and set req.userId
@@ -23,7 +36,11 @@ export function createServer() {
   app.use(cors());
 
   // Special handler for Stripe webhook (raw body)
-  app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), handleStripeWebhook);
+  app.post(
+    "/api/stripe/webhook",
+    express.raw({ type: "application/json" }),
+    handleStripeWebhook,
+  );
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

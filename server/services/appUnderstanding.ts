@@ -10,7 +10,9 @@ export interface AppContent {
  * Detects the technology stack from app content
  * Returns: runtime, framework, database, external dependencies
  */
-export async function detectStack(appContent: AppContent): Promise<StackProfile> {
+export async function detectStack(
+  appContent: AppContent,
+): Promise<StackProfile> {
   const stackProfile: StackProfile = {
     external_apis: [],
   };
@@ -43,7 +45,9 @@ export async function detectStack(appContent: AppContent): Promise<StackProfile>
  * Analyzes code patterns to understand app behavior
  * Returns: statefulness, write-heavy patterns, background jobs, etc
  */
-export async function analyzePatterns(appContent: AppContent): Promise<BehaviorProfile> {
+export async function analyzePatterns(
+  appContent: AppContent,
+): Promise<BehaviorProfile> {
   const behaviorProfile: BehaviorProfile = {
     is_stateful: false,
     write_heavy: false,

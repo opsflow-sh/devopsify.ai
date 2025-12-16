@@ -1,6 +1,7 @@
 # Claude Code Skill: Frontend Component Architecture
 
 ## Overview
+
 Clean, reusable, maintainable React components following established patterns in the codebase.
 
 ## Core Rules
@@ -8,6 +9,7 @@ Clean, reusable, maintainable React components following established patterns in
 ### 1. Component Location
 
 **App Shell & Layout Components:**
+
 ```
 client/components/app/
 ├── AppShell.tsx         (Main layout wrapper)
@@ -17,6 +19,7 @@ client/components/app/
 ```
 
 **Pages (Route handlers):**
+
 ```
 client/pages/app/
 ├── Connect.tsx          (FTUE step 1)
@@ -31,6 +34,7 @@ client/pages/app/
 ```
 
 **UI Components (Already provided by ShadcN):**
+
 ```
 client/components/ui/    (Use these: Button, Badge, Dialog, etc)
 ```
@@ -38,6 +42,7 @@ client/components/ui/    (Use these: Button, Badge, Dialog, etc)
 ### 2. Type Every Component
 
 **❌ WRONG:**
+
 ```typescript
 export default function Connect({ onAnalyze, isLoading }) {
   // ...
@@ -45,6 +50,7 @@ export default function Connect({ onAnalyze, isLoading }) {
 ```
 
 **✅ CORRECT:**
+
 ```typescript
 import type { FC } from "react";
 
@@ -65,6 +71,7 @@ export default Connect;
 Split components if they exceed 150 lines. Break into smaller pieces:
 
 **❌ WRONG (280 lines in one component):**
+
 ```typescript
 export function LaunchVerdict() {
   // ... verdict logic
@@ -77,6 +84,7 @@ export function LaunchVerdict() {
 ```
 
 **✅ CORRECT (split into smaller pieces):**
+
 ```typescript
 // client/components/app/verdicts/VerdictStatus.tsx
 interface VerdictStatusProps {
@@ -110,6 +118,7 @@ export default function LaunchVerdict() {
 ### 4. Use React Hook Form for Forms
 
 **❌ WRONG (manual state management):**
+
 ```typescript
 export function Connect() {
   const [githubUrl, setGithubUrl] = useState("");
@@ -128,6 +137,7 @@ export function Connect() {
 ```
 
 **✅ CORRECT (react-hook-form):**
+
 ```typescript
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -161,6 +171,7 @@ export function Connect() {
 ### 5. Use React Query for Data Fetching
 
 **❌ WRONG (manual fetch):**
+
 ```typescript
 export function WatchDashboard() {
   const [analysis, setAnalysis] = useState(null);
@@ -179,6 +190,7 @@ export function WatchDashboard() {
 ```
 
 **✅ CORRECT (react-query):**
+
 ```typescript
 import { useQuery } from "@tanstack/react-query";
 
@@ -201,6 +213,7 @@ export function WatchDashboard({ analysisId }: Props) {
 The codebase already has all ShadcN components. Use them:
 
 **Buttons:**
+
 ```typescript
 import { Button } from "@/components/ui/button";
 
@@ -211,6 +224,7 @@ import { Button } from "@/components/ui/button";
 ```
 
 **Cards:**
+
 ```typescript
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -223,6 +237,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 ```
 
 **Badges:**
+
 ```typescript
 import { Badge } from "@/components/ui/badge";
 
@@ -232,6 +247,7 @@ import { Badge } from "@/components/ui/badge";
 ```
 
 **Dialogs:**
+
 ```typescript
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -246,6 +262,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 ```
 
 **Forms:**
+
 ```typescript
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -291,6 +308,7 @@ export const AppShell: FC<AppShellProps> = ({
 ### 8. Controlled vs Uncontrolled Components
 
 **Use controlled when you need to:**
+
 - Validate in real-time
 - Clear on submit
 - Show external state
@@ -400,11 +418,13 @@ export default function LaunchVerdict() {
 ## Common Patterns
 
 ### Loading State
+
 ```typescript
 {isLoading && <div className="text-center text-gray-500">Loading...</div>}
 ```
 
 ### Error State
+
 ```typescript
 {error && (
   <Alert variant="destructive">
@@ -415,6 +435,7 @@ export default function LaunchVerdict() {
 ```
 
 ### Empty State
+
 ```typescript
 {data?.length === 0 && (
   <div className="text-center text-gray-500">No data available</div>
@@ -422,6 +443,7 @@ export default function LaunchVerdict() {
 ```
 
 ### Button Loading State
+
 ```typescript
 <Button disabled={isSubmitting}>
   {isSubmitting ? "Loading..." : "Submit"}
@@ -440,4 +462,3 @@ export default function LaunchVerdict() {
 - [ ] Loading states shown
 - [ ] No console.log() in production code
 - [ ] Accessibility: buttons have labels, inputs have labels
-

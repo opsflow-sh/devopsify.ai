@@ -5,7 +5,11 @@ import type { Request, Response, NextFunction } from "express";
  * Extracts sessionToken from Authorization header and verifies it
  * Sets req.userId if valid
  */
-export async function requireAuth(req: Request, res: Response, next: NextFunction) {
+export async function requireAuth(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {

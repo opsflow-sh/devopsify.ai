@@ -1,5 +1,14 @@
 import { Badge } from "@/components/ui/badge";
-import { Github, Cloud, Zap, Layers, Globe, Gauge, Cpu, Rocket } from "lucide-react";
+import {
+  Github,
+  Cloud,
+  Zap,
+  Layers,
+  Globe,
+  Gauge,
+  Cpu,
+  Rocket,
+} from "lucide-react";
 
 export default function WorksEverywhere() {
   const platforms = [
@@ -53,7 +62,12 @@ export default function WorksEverywhere() {
     },
   ];
 
-  const categories = ["Vibe Coding", "Popular Platforms", "Version Control", "Deployment"];
+  const categories = [
+    "Vibe Coding",
+    "Popular Platforms",
+    "Version Control",
+    "Deployment",
+  ];
 
   return (
     <section className="bg-primary/5 py-20 md:py-28">
@@ -65,7 +79,8 @@ export default function WorksEverywhere() {
               Works everywhere
             </h2>
             <p className="text-lg text-foreground/70">
-              No matter where you built your app or where you plan to deploy it, Devopsify speaks your language.
+              No matter where you built your app or where you plan to deploy it,
+              Devopsify speaks your language.
             </p>
           </div>
 
@@ -84,8 +99,12 @@ export default function WorksEverywhere() {
                       {platform.category}
                     </Badge>
                   </div>
-                  <h3 className="font-semibold text-foreground">{platform.name}</h3>
-                  <p className="text-sm text-foreground/70">{platform.description}</p>
+                  <h3 className="font-semibold text-foreground">
+                    {platform.name}
+                  </h3>
+                  <p className="text-sm text-foreground/70">
+                    {platform.description}
+                  </p>
                 </div>
               );
             })}
@@ -94,7 +113,9 @@ export default function WorksEverywhere() {
           {/* Callout */}
           <div className="max-w-2xl mx-auto bg-background rounded-xl p-8 border border-primary/20">
             <p className="text-center text-foreground leading-relaxed">
-              Don't see your platform? Devopsify works with <strong>any app repository</strong> — just export your code or point us to your GitHub repo.
+              Don't see your platform? Devopsify works with{" "}
+              <strong>any app repository</strong> — just export your code or
+              point us to your GitHub repo.
             </p>
           </div>
         </div>

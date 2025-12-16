@@ -1,6 +1,7 @@
 # Claude Code Skill: Testing & Edge Cases
 
 ## Overview
+
 Ensure code handles edge cases and can be tested. Use Vitest (already configured).
 
 ## Testing Structure
@@ -39,12 +40,14 @@ describe("calculateLaunchConfidence", () => {
     };
 
     const { score } = calculateLaunchConfidence(stack, behavior);
-    
+
     expect(score).toBeGreaterThan(80);
   });
 
   it("returns low score for risky app", () => {
-    const stack: StackProfile = { external_apis: ["stripe", "sendgrid", "twilio"] };
+    const stack: StackProfile = {
+      external_apis: ["stripe", "sendgrid", "twilio"],
+    };
     const behavior: BehaviorProfile = {
       is_stateful: true,
       write_heavy: true,
@@ -55,7 +58,7 @@ describe("calculateLaunchConfidence", () => {
     };
 
     const { score } = calculateLaunchConfidence(stack, behavior);
-    
+
     expect(score).toBeLessThan(50);
   });
 
@@ -76,12 +79,13 @@ describe("calculateLaunchConfidence", () => {
 ### `detectStack()` Edge Cases
 
 **Test for:**
+
 ```typescript
 describe("detectStack", () => {
   it("handles missing package.json", async () => {
     const content = { files: new Map() };
     const result = await detectStack(content);
-    
+
     expect(result.runtime).toBeUndefined();
     expect(result.external_apis).toEqual([]);
   });
@@ -91,7 +95,7 @@ describe("detectStack", () => {
       files: new Map([["package.json", "{ invalid json"]]),
       packageJson: null,
     };
-    
+
     const result = await detectStack(content);
     // Should not throw, should return safe defaults
     expect(result).toBeDefined();
@@ -100,26 +104,26 @@ describe("detectStack", () => {
   it("detects multiple databases", async () => {
     const packageJson = {
       dependencies: {
-        "pg": "1.0.0",
-        "mongodb": "4.0.0",
-        "redis": "3.0.0",
+        pg: "1.0.0",
+        mongodb: "4.0.0",
+        redis: "3.0.0",
       },
     };
 
     const result = await detectStack({ packageJson, files: new Map() });
-    
+
     expect(result.databases).toContain("postgres");
     expect(result.databases).toContain("mongodb");
   });
 
   it("ignores dev dependencies in count", async () => {
     const packageJson = {
-      dependencies: { "express": "1.0.0" },
-      devDependencies: { "vitest": "1.0.0", "stripe": "1.0.0" },
+      dependencies: { express: "1.0.0" },
+      devDependencies: { vitest: "1.0.0", stripe: "1.0.0" },
     };
 
     const result = await detectStack({ packageJson, files: new Map() });
-    
+
     // Should not count stripe from devDeps as external_api
     expect(result.external_apis).not.toContain("stripe");
   });
@@ -129,12 +133,13 @@ describe("detectStack", () => {
 ### `analyzePatterns()` Edge Cases
 
 **Test for:**
+
 ```typescript
 describe("analyzePatterns", () => {
   it("handles empty files", async () => {
     const content = { files: new Map() };
     const result = await analyzePatterns(content);
-    
+
     expect(result.is_stateful).toBe(false);
     expect(result.write_heavy).toBe(false);
   });
@@ -147,7 +152,7 @@ describe("analyzePatterns", () => {
     };
 
     const result = await analyzePatterns(content);
-    
+
     expect(result.is_stateful).toBe(false);
   });
 
@@ -159,7 +164,7 @@ describe("analyzePatterns", () => {
     };
 
     const result = await analyzePatterns(content);
-    
+
     expect(result.is_stateful).toBe(true);
   });
 
@@ -174,7 +179,7 @@ describe("analyzePatterns", () => {
     };
 
     const result = await analyzePatterns(content);
-    
+
     expect(result.estimated_concurrency_risk).toBe("high");
   });
 });
@@ -183,6 +188,7 @@ describe("analyzePatterns", () => {
 ### `calculateLaunchConfidence()` Edge Cases
 
 **Test for:**
+
 ```typescript
 describe("calculateLaunchConfidence", () => {
   it("handles all zero risk factors", () => {
@@ -196,7 +202,7 @@ describe("calculateLaunchConfidence", () => {
     } as BehaviorProfile;
 
     const { score } = calculateLaunchConfidence(stack, behavior);
-    
+
     expect(score).toBeGreaterThan(70);
   });
 
@@ -205,7 +211,7 @@ describe("calculateLaunchConfidence", () => {
     const result1 = calculateLaunchConfidence({} as any, {} as any);
     const result2 = calculateLaunchConfidence(
       { external_apis: Array(100).fill("api") } as any,
-      { estimated_concurrency_risk: "high" } as any
+      { estimated_concurrency_risk: "high" } as any,
     );
 
     expect(result1.score).toBeGreaterThanOrEqual(0);
@@ -215,9 +221,12 @@ describe("calculateLaunchConfidence", () => {
   });
 
   it("includes factors in explanation", () => {
-    const result = calculateLaunchConfidence({} as any, {
-      is_stateful: true,
-    } as any);
+    const result = calculateLaunchConfidence(
+      {} as any,
+      {
+        is_stateful: true,
+      } as any,
+    );
 
     expect(result.factors).toContain("stores state");
   });
@@ -227,6 +236,7 @@ describe("calculateLaunchConfidence", () => {
 ### Auth Routes Edge Cases
 
 **Test for:**
+
 ```typescript
 describe("handleSignup", () => {
   it("rejects invalid email", async () => {
@@ -260,35 +270,49 @@ describe("handleSignup", () => {
   it("rejects duplicate email", async () => {
     // First signup succeeds
     // Second signup with same email fails
-    
+
     const req1 = {
-      body: { email: "test@example.com", password: "Password123", name: "Test" },
+      body: {
+        email: "test@example.com",
+        password: "Password123",
+        name: "Test",
+      },
     } as Request;
     const res1 = { status: vi.fn(), json: vi.fn() } as unknown as Response;
-    
+
     await handleSignup(req1, res1);
     expect(res1.status).toHaveBeenCalledWith(200);
 
     // Second attempt
     const req2 = {
-      body: { email: "test@example.com", password: "Password123", name: "Test" },
+      body: {
+        email: "test@example.com",
+        password: "Password123",
+        name: "Test",
+      },
     } as Request;
     const res2 = { status: vi.fn(), json: vi.fn() } as unknown as Response;
-    
+
     await handleSignup(req2, res2);
     expect(res2.status).toHaveBeenCalledWith(409);
   });
 
   it("hashes password before storing", async () => {
     const req = {
-      body: { email: "test@example.com", password: "Password123", name: "Test" },
+      body: {
+        email: "test@example.com",
+        password: "Password123",
+        name: "Test",
+      },
     } as Request;
     const res = { status: vi.fn(), json: vi.fn() } as unknown as Response;
 
     await handleSignup(req, res);
 
     // Get user from DB and check password is hashed
-    const user = await getOne("SELECT * FROM users WHERE email = $1", ["test@example.com"]);
+    const user = await getOne("SELECT * FROM users WHERE email = $1", [
+      "test@example.com",
+    ]);
     expect(user.password_hash).not.toBe("Password123");
     expect(user.password_hash).toMatch(/^\$2[aby]/); // bcrypt hash
   });
@@ -345,7 +369,7 @@ test("fetches user", async () => {
   } as any);
 
   const result = await getUser("123");
-  
+
   expect(result.email).toBe("test@example.com");
 });
 ```
@@ -366,11 +390,11 @@ vi.mock("octokit", () => ({
 test("handles GitHub API error", async () => {
   const { Octokit } = await import("octokit");
   vi.mocked(Octokit.prototype.repos.get).mockRejectedValue(
-    new Error("404 Not Found")
+    new Error("404 Not Found"),
   );
 
   const result = await cloneGitHubRepo("fake/repo");
-  
+
   expect(result).toBeNull();
 });
 ```
@@ -387,4 +411,3 @@ test("rejects on error", async () => {
   await expect(analyzeApp({...})).rejects.toThrow();
 });
 ```
-

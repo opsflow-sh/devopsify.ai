@@ -3,7 +3,9 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 
 export default function HeroSplit() {
-  const [audience, setAudience] = useState<"vibe-coder" | "founder">("vibe-coder");
+  const [audience, setAudience] = useState<"vibe-coder" | "founder">(
+    "vibe-coder",
+  );
 
   const messages = {
     "vibe-coder": {
@@ -88,7 +90,8 @@ export default function HeroSplit() {
 
           {/* Microcopy */}
           <p className="text-sm text-foreground/60 leading-relaxed">
-            Works with any vibe-coded app. GitHub, Vercel, Replit, Lovable, Builder.io, Netlify + more. No cloud credentials required.
+            Works with any vibe-coded app. GitHub, Vercel, Replit, Lovable,
+            Builder.io, Netlify + more. No cloud credentials required.
           </p>
 
           {/* Trust Badges */}

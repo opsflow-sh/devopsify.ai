@@ -1,16 +1,19 @@
 # Claude Code Skill: Service Logic & Business Rules
 
 ## Overview
+
 Core business logic services that make DevOpsify's value proposition work. These encode 20 years of DevOps experience.
 
 ## App Understanding Service
 
 ### Purpose
+
 Detect the technology stack and behavior patterns of an uploaded app.
 
 ### `detectStack(appContent): Promise<StackProfile>`
 
 **Algorithm:**
+
 1. Look for package.json → Node.js/JavaScript
 2. Look for requirements.txt → Python
 3. Look for go.mod → Go
@@ -18,9 +21,12 @@ Detect the technology stack and behavior patterns of an uploaded app.
 5. Parse for frameworks, databases, external APIs
 
 **Example Detection:**
+
 ```typescript
 // Input: Node.js app with Express + PostgreSQL
-export async function detectStack(appContent: AppContent): Promise<StackProfile> {
+export async function detectStack(
+  appContent: AppContent,
+): Promise<StackProfile> {
   const stack: StackProfile = {
     external_apis: [],
   };
@@ -29,14 +35,14 @@ export async function detectStack(appContent: AppContent): Promise<StackProfile>
   const packageJson = appContent.packageJson;
   if (packageJson) {
     stack.runtime = "node";
-    
+
     // Detect framework
     if (packageJson.dependencies?.["express"]) {
       stack.framework = "express";
     } else if (packageJson.dependencies?.["next"]) {
       stack.framework = "next";
     }
-    
+
     // Detect databases
     if (packageJson.dependencies?.["pg"]) {
       stack.database = "postgresql";
@@ -44,7 +50,7 @@ export async function detectStack(appContent: AppContent): Promise<StackProfile>
     } else if (packageJson.dependencies?.["mongoose"]) {
       stack.database = "mongodb";
     }
-    
+
     // Detect external APIs
     if (packageJson.dependencies?.["stripe"]) {
       stack.external_apis?.push("stripe");
@@ -59,6 +65,7 @@ export async function detectStack(appContent: AppContent): Promise<StackProfile>
 ```
 
 **Key Rules:**
+
 - Be conservative (don't guess)
 - Handle missing files gracefully (return empty values, don't throw)
 - Support multiple languages (Node priority, Python secondary)
@@ -67,6 +74,7 @@ export async function detectStack(appContent: AppContent): Promise<StackProfile>
 ### `analyzePatterns(appContent): Promise<BehaviorProfile>`
 
 **Detect: Statefulness**
+
 ```typescript
 // Stateful if:
 - Global variables that store state
@@ -81,6 +89,7 @@ export async function detectStack(appContent: AppContent): Promise<StackProfile>
 ```
 
 **Detect: Write-Heavy**
+
 ```typescript
 // Write-heavy if:
 - More INSERT/UPDATE/DELETE than SELECT
@@ -95,6 +104,7 @@ export async function detectStack(appContent: AppContent): Promise<StackProfile>
 ```
 
 **Detect: Background Jobs**
+
 ```typescript
 // Has background jobs if:
 - setTimeout/setInterval
@@ -108,6 +118,7 @@ export async function detectStack(appContent: AppContent): Promise<StackProfile>
 ```
 
 **Detect: File Uploads**
+
 ```typescript
 // Has file uploads if:
 - multer/formidable/werkzeug usage
@@ -120,8 +131,11 @@ export async function detectStack(appContent: AppContent): Promise<StackProfile>
 ```
 
 **Example:**
+
 ```typescript
-export async function analyzePatterns(appContent: AppContent): Promise<BehaviorProfile> {
+export async function analyzePatterns(
+  appContent: AppContent,
+): Promise<BehaviorProfile> {
   const profile: BehaviorProfile = {
     is_stateful: false,
     write_heavy: false,
@@ -137,19 +151,27 @@ export async function analyzePatterns(appContent: AppContent): Promise<BehaviorP
   }
 
   // Detect statefulness
-  if (fileContent.includes("global ") || fileContent.includes("let ") + fileContent.includes("module.exports")) {
+  if (
+    fileContent.includes("global ") ||
+    fileContent.includes("let ") + fileContent.includes("module.exports")
+  ) {
     profile.is_stateful = true;
   }
 
   // Detect write-heavy
-  const insertCount = (fileContent.match(/INSERT|UPDATE|DELETE/gi) || []).length;
+  const insertCount = (fileContent.match(/INSERT|UPDATE|DELETE/gi) || [])
+    .length;
   const selectCount = (fileContent.match(/SELECT/gi) || []).length;
   if (insertCount > selectCount) {
     profile.write_heavy = true;
   }
 
   // Detect background jobs
-  if (fileContent.includes("setTimeout") || fileContent.includes("setInterval") || fileContent.includes("queue")) {
+  if (
+    fileContent.includes("setTimeout") ||
+    fileContent.includes("setInterval") ||
+    fileContent.includes("queue")
+  ) {
     profile.has_background_jobs = true;
   }
 
@@ -170,6 +192,7 @@ export async function analyzePatterns(appContent: AppContent): Promise<BehaviorP
 ## Judgment Engine Service
 
 ### Purpose
+
 Analyze detected stack and behavior to produce recommendations.
 
 ### `calculateLaunchConfidence(stackProfile, behaviorProfile): Promise<{score, factors}>`
@@ -179,7 +202,7 @@ Analyze detected stack and behavior to produce recommendations.
 ```typescript
 export async function calculateLaunchConfidence(
   stack: StackProfile,
-  behavior: BehaviorProfile
+  behavior: BehaviorProfile,
 ): Promise<{ score: number; factors: string[] }> {
   let score = 0;
   const factors: string[] = [];
@@ -188,7 +211,9 @@ export async function calculateLaunchConfidence(
   // Stateless apps are safer
   if (behavior.is_stateful) {
     score += 10;
-    factors.push("App stores state in memory or files (may cause issues during restarts)");
+    factors.push(
+      "App stores state in memory or files (may cause issues during restarts)",
+    );
   } else {
     score += 30;
     factors.push("App is stateless (safer)");
@@ -215,7 +240,9 @@ export async function calculateLaunchConfidence(
     factors.push(`${externalDeps} external API dependencies`);
   } else {
     score += 10;
-    factors.push(`${externalDeps} external API dependencies (watch these closely)`);
+    factors.push(
+      `${externalDeps} external API dependencies (watch these closely)`,
+    );
   }
 
   // Concurrency: 0-20 points
@@ -239,6 +266,7 @@ export async function calculateLaunchConfidence(
 ```
 
 **Key Rules:**
+
 - Score must be DETERMINISTIC (same input = same output)
 - All weights documented
 - Score clamped 0-100
@@ -247,19 +275,21 @@ export async function calculateLaunchConfidence(
 ### `detectRisks(stack, behavior): Promise<RiskScenario[]>`
 
 **Algorithm:**
+
 1. Load all risk_scenarios from database
 2. Score each by relevance to this app
 3. Return top 3 by user impact (not technical severity)
 4. Plain English explanations
 
 **Example Risk Scoring:**
+
 ```typescript
 export async function detectRisks(
   stack: StackProfile,
-  behavior: BehaviorProfile
+  behavior: BehaviorProfile,
 ): Promise<RiskScenario[]> {
   const allRisks = await getMany<RiskScenario>(
-    "SELECT * FROM risk_scenarios ORDER BY severity DESC"
+    "SELECT * FROM risk_scenarios ORDER BY severity DESC",
   );
 
   const relevantRisks: Array<RiskScenario & { score: number }> = [];
@@ -304,22 +334,26 @@ export async function detectRisks(
 ### `recommendPlatform(stack, behavior, currentPlatform?): Promise<PlatformRecommendation>`
 
 **Algorithm:**
+
 1. If currentPlatform provided and still fits → recommend staying
 2. Else recommend best match from database
 3. Always explain "why" and "when it changes"
 4. NEVER push away from Replit
 
 **Example:**
+
 ```typescript
 export async function recommendPlatform(
   stack: StackProfile,
   behavior: BehaviorProfile,
-  currentPlatform?: string
+  currentPlatform?: string,
 ): Promise<PlatformRecommendation> {
   // If on Replit and still works, recommend staying
   if (currentPlatform === "replit") {
     const confidence =
-      !behavior.write_heavy && !behavior.is_stateful && behavior.estimated_concurrency_risk !== "high"
+      !behavior.write_heavy &&
+      !behavior.is_stateful &&
+      behavior.estimated_concurrency_risk !== "high"
         ? 100
         : 70;
 
@@ -332,7 +366,8 @@ export async function recommendPlatform(
           "Handles your current usage well",
           "Keeps things simple while you grow",
         ],
-        when_it_changes: "If usage grows 5–10×, this setup may need an upgrade.",
+        when_it_changes:
+          "If usage grows 5–10×, this setup may need an upgrade.",
         confidence_note: "You're not missing out by staying here.",
       };
     }
@@ -340,7 +375,7 @@ export async function recommendPlatform(
 
   // Get best fit from database
   const platforms = await getMany<PlatformRecommendation>(
-    "SELECT * FROM platform_recommendations"
+    "SELECT * FROM platform_recommendations",
   );
 
   return platforms[0]; // Simplified - in reality, score based on stack
@@ -350,16 +385,18 @@ export async function recommendPlatform(
 ### `recommendNextStep(stack, behavior, stage): Promise<NextBestStepRecommendation>`
 
 **Algorithm:**
+
 1. Analyze current stage (mvp, watch, growth, production)
 2. Determine ONE action only
 3. No task lists, no overwhelm
 
 **Example:**
+
 ```typescript
 export async function recommendNextStep(
   stack: StackProfile,
   behavior: BehaviorProfile,
-  stage: "mvp" | "watch" | "growth" | "production"
+  stage: "mvp" | "watch" | "growth" | "production",
 ): Promise<NextBestStepRecommendation> {
   // MVP stage: focus on sharing
   if (stage === "mvp") {
@@ -397,18 +434,23 @@ export async function recommendNextStep(
 ## Key Principles
 
 ### Determinism
+
 Every algorithm must be deterministic. Same input always produces same output.
 
 ### Conservatism
+
 When unsure, be conservative. Don't flag risks that aren't likely.
 
 ### Plain English
+
 All outputs in plain English, no jargon.
 
 ### Single Responsibility
+
 Each function does ONE thing well.
 
 ### Testable
+
 Every algorithm should be testable with unit tests.
 
 ## Caching Strategy
@@ -435,4 +477,3 @@ export async function analyzeWithCache(repoUrl: string) {
   return result;
 }
 ```
-

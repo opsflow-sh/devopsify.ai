@@ -11,6 +11,7 @@ A SaaS platform that analyzes vibe-coded apps and helps founders safely grow fro
 ## Project Status
 
 ✅ **Done:**
+
 - Marketing website (complete)
 - Database schema (ready)
 - Type definitions (ready)
@@ -19,6 +20,7 @@ A SaaS platform that analyzes vibe-coded apps and helps founders safely grow fro
 - Environment setup (ready)
 
 ⏳ **Your Job:**
+
 - Implement all the services and routes defined in `CLAUDE_HANDOFF.md`
 - Build the frontend FTUE screens
 - Wire everything together
@@ -103,6 +105,7 @@ client/
 ## Priority Order (What to Build First)
 
 ### Priority 1: Get Analysis Working
+
 These are critical for the core value proposition:
 
 1. `server/db/client.ts` - Database connection pool
@@ -115,6 +118,7 @@ These are critical for the core value proposition:
 **Target:** By end of Week 1, you can upload a GitHub repo and get a verdict.
 
 ### Priority 2: Frontend FTUE
+
 Build the screens users interact with:
 
 1. `client/components/app/AppShell.tsx` - Layout wrapper
@@ -126,6 +130,7 @@ Build the screens users interact with:
 **Target:** By end of Week 2, users see results.
 
 ### Priority 3: Subscription & Dashboard
+
 Monetization and retention:
 
 1. `server/routes/stripe.ts` - Stripe integration
@@ -136,6 +141,7 @@ Monetization and retention:
 **Target:** By end of Week 3, you can charge users.
 
 ### Priority 4: Advanced (Nice to Have)
+
 Only after core is solid:
 
 1. Change Generator (Phase 1-3 automations)
@@ -147,34 +153,39 @@ Only after core is solid:
 ## Code Principles
 
 ### Plain English Above All
+
 Every user-facing output must be language a vibe coder understands.
 
 ❌ Bad: "Kubernetes orchestration limits approaching"
 ✅ Good: "If 100+ people use this at once, requests may slow down"
 
 ### Keep Services Small
+
 Services should be ~200-300 lines, not 1000+ monsters.
 
 ❌ Bad: One 1000-line judgmentEngine service
-✅ Good: Split into calculateConfidence(), detectRisks(), recommend*()
+✅ Good: Split into calculateConfidence(), detectRisks(), recommend\*()
 
 ### Type Safety
+
 Use TypeScript strictly. No `any` types.
 
 ```typescript
 // Good
-async function detectRisks(stack: StackProfile): Promise<Risk[]>
+async function detectRisks(stack: StackProfile): Promise<Risk[]>;
 
 // Bad
-async function detectRisks(stack: any): Promise<any>
+async function detectRisks(stack: any): Promise<any>;
 ```
 
 ### Database Efficiency
+
 - Always index foreign keys and frequent queries
 - Use parameterized queries to prevent SQL injection
 - Avoid N+1 queries (fetch related data in one query)
 
 ### Error Handling
+
 Every function should handle errors gracefully.
 
 ```typescript
@@ -183,7 +194,7 @@ try {
 } catch (error) {
   // Log the error
   console.error("Failed to analyze app:", error);
-  
+
   // Return helpful error to user
   res.status(500).json({ error: "Analysis failed" });
 }
@@ -194,53 +205,53 @@ try {
 ## Common Patterns
 
 ### Fetching Data from Database
+
 ```typescript
 import { getOne, getMany } from "@/server/db/client";
 
 // Get single record
-const user = await getOne<User>(
-  "SELECT * FROM users WHERE id = $1",
-  [userId]
-);
+const user = await getOne<User>("SELECT * FROM users WHERE id = $1", [userId]);
 
 // Get multiple records
 const alerts = await getMany<Alert>(
   "SELECT * FROM alerts WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2",
-  [userId, limit]
+  [userId, limit],
 );
 ```
 
 ### Creating Records
+
 ```typescript
 import { query } from "@/server/db/client";
 
 const result = await query(
   "INSERT INTO users (email, password_hash, name) VALUES ($1, $2, $3) RETURNING *",
-  [email, hashedPassword, name]
+  [email, hashedPassword, name],
 );
 const user = result.rows[0];
 ```
 
 ### API Response Pattern
+
 ```typescript
 export async function handleSomething(req: Request, res: Response) {
   try {
     // Your logic
     const result = await someService();
-    
+
     // Always return structured response
     res.json({
       success: true,
-      data: result
+      data: result,
     });
   } catch (error) {
     // Log for debugging
     console.error("Error in handleSomething:", error);
-    
+
     // Return user-friendly error
     res.status(500).json({
       error: "Something went wrong",
-      code: "INTERNAL_ERROR"
+      code: "INTERNAL_ERROR",
     });
   }
 }
@@ -251,6 +262,7 @@ export async function handleSomething(req: Request, res: Response) {
 ## Testing Your Work
 
 ### Test Database Connection
+
 ```bash
 node -e "
 const { query } = require('./dist/server/db/client');
@@ -259,6 +271,7 @@ query('SELECT NOW()').then(r => console.log('Connected!'));
 ```
 
 ### Test Auth Signup
+
 ```bash
 curl -X POST http://localhost:5173/api/auth/signup \
   -H "Content-Type: application/json" \
@@ -266,6 +279,7 @@ curl -X POST http://localhost:5173/api/auth/signup \
 ```
 
 ### Test Analysis
+
 ```bash
 curl -X POST http://localhost:5173/api/analyze \
   -H "Content-Type: application/json" \
